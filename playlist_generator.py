@@ -38,7 +38,7 @@ def get_reply():
     messages[1]["content"] = f"{messages[1]['content']}{'motivation to do homework last minute'}"
     messages[2]["content"] = f"{example_json}"
     messages[3]["content"] = f"{messages[3]['content']}{args.p if args.p else get_user_input('prompt')}"
-    print("messages: ",messages)
+    # print("messages: ",messages)
     for data in client.chat.completions.create(
     model=model[gpt_model],
      messages=messages,
@@ -60,9 +60,18 @@ def get_user_input(prompt:str)->str:
 def get_prompt()->list[dict]:
     with open("prompt.json", "r") as f:
         return json.load(f)
-    
-def main():
+
+def get_playlist()->list[dict]:
+    playlist_tokens = []
     for data in get_reply():
+        playlist_tokens.append(data)
         print(data, end="", flush=True)
+    playlist = "".join(playlist_tokens)
+    playlist = json.loads(playlist)
+    return playlist
+
+def main():
+    playlist = get_playlist()
+    print("\n\n\nplaylist: ",playlist, "type: ",type(playlist))
 if __name__ == "__main__":
     main()
