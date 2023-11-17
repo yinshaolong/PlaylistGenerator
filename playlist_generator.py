@@ -25,8 +25,7 @@ def parse_args():
     return parser.parse_args()
 
 
-
-def get_reply():
+def get_messages_and_model()->list[str]:
     args = parse_args()
     gpt_model = args.m
 
@@ -38,6 +37,9 @@ def get_reply():
     messages[2]["content"] = f"{example_json}"
     messages[3]["content"] = f"{playlist_gen_prompt}{args.p if args.p else get_user_input('prompt')}"
     print("messages: ",messages)
+    return messages, gpt_model
+
+def get_reply(messages:str, gpt_model:str)->str:
     for data in client.chat.completions.create(
     model=model[gpt_model],
      messages=messages,
@@ -56,13 +58,14 @@ def get_user_input(prompt:str)->str:
         valid_input = True if user_input else False
     return user_input
 
-def get_prompt()->list[dict]:
-    with open("prompt.json", "r") as f:
+def get_prompt(prompt = "prompt.json")->list[dict]:
+    with open(prompt, "r") as f:
         return json.load(f)
 
 def get_playlist()->list[dict]:
     playlist_tokens = []
-    for data in get_reply():
+    messages, gpt_model = get_messages_and_model()
+    for data in get_reply(messages, gpt_model):
         playlist_tokens.append(data)
         print(data, end="", flush=True)
     playlist = "".join(playlist_tokens)
