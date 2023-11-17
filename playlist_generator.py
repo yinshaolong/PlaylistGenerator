@@ -11,23 +11,23 @@ client = openai.OpenAI()
 model = {3:"gpt-3.5-turbo", 4:"gpt-4-1106-preview"}
 
 def parse_args():
-    parser = argparse.ArgumentParser(description='Generate a playlist based on a prompt')
-    parser.add_argument('-p', type=str, help='Prompt to generate playlist from')
-    parser.add_argument('-m', default = 4, type=str, help='Model to use for generation')
-    parser.add_argument('-l', default = 5, type=int, help='Length of playlist to generate')
+    parser = argparse.ArgumentParser(description="Generate a playlist based on a prompt")
+    parser.add_argument("-p", type=str, help="Prompt to generate playlist from")
+    parser.add_argument("-m", default = 4, type=str, help="Model to use for generation")
+    parser.add_argument("-l", default = 5, type=int, help="Length of playlist to generate")
     return parser.parse_args()
 
 
 
 def get_reply():
     args = parse_args()
-    model = args.m
+    gpt_model = args.m
     messages = get_prompt()
-    messages[1].user = f'{messages[1].user}{args.p if args.p else get_user_input("prompt")}'
-
+    messages[1]["content"] = f"{messages[1]['content']}{args.p if args.p else get_user_input('prompt')}"
+    print("messages: ",messages)
     for data in client.chat.completions.create(
-    model=model,
-    messages= messages,
+    model=model[gpt_model],
+     messages=messages,
     max_tokens = 200,
     stream=True,
     ):          
@@ -49,6 +49,6 @@ def get_prompt()->list[dict]:
     
 def main():
     for data in get_reply():
-        print(data)
+        print(data, end="", flush=True)
 if __name__ == "__main__":
     main()
