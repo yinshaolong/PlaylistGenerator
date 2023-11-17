@@ -10,9 +10,21 @@ client = openai.OpenAI()
 
 model = {3:"gpt-3.5-turbo", 4:"gpt-4-1106-preview"}
 
+example_json = [
+  {"song": "Eye of the Tiger", "artist": "Survivor"},
+  {"song": "Lose Yourself", "artist": "Eminem"},
+  {"song": "Stronger", "artist": "Kanye West"},
+  {"song": "Don't Stop Believin'", "artist": "Journey"},
+  {"song": "Work Hard, Play Hard", "artist": "Wiz Khalifa"},
+  {"song": "Final Countdown", "artist": "Europe"},
+  {"song": "Levels", "artist": "Avicii"},
+  {"song": "Harder, Better, Faster, Stronger", "artist": "Daft Punk"},
+  {"song": "Remember the Name", "artist": "Fort Minor"},
+  {"song": "Can't Hold Us", "artist": "Macklemore & Ryan Lewis"}
+]
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate a playlist based on a prompt")
-    parser.add_argument("-p", type=str, help="Prompt to generate playlist from")
+    parser.add_argument("-p", default = "motivation to do homework last minute", type=str, help="Prompt to generate playlist from")
     parser.add_argument("-m", default = 4, type=str, help="Model to use for generation")
     parser.add_argument("-l", default = 5, type=int, help="Length of playlist to generate")
     return parser.parse_args()
@@ -23,12 +35,14 @@ def get_reply():
     args = parse_args()
     gpt_model = args.m
     messages = get_prompt()
-    messages[1]["content"] = f"{messages[1]['content']}{args.p if args.p else get_user_input('prompt')}"
+    messages[1]["content"] = f"{messages[1]['content']}{'motivation to do homework last minute'}"
+    messages[2]["content"] = f"{example_json}"
+    messages[3]["content"] = f"{messages[3]['content']}{args.p if args.p else get_user_input('prompt')}"
     print("messages: ",messages)
     for data in client.chat.completions.create(
     model=model[gpt_model],
      messages=messages,
-    max_tokens = 200,
+    # max_tokens = 200,
     stream=True,
     ):          
          #streams have a different format - have delta.content instead of message.content

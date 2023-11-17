@@ -5,6 +5,14 @@
     },
     {
         "role": "user",
-        "content": "Generate a playlist of songs based on this prompt:"
+        "content": "Generate a playlist of songs based on this prompt: "
+    },
+    {
+        "role": "assistant",
+        "content": ""
+    },
+    {
+        "role": "user",
+        "content": "Generate a playlist of songs based on this prompt: "
     }
 ]
