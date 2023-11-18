@@ -2,3 +2,8 @@ hook up to a front end + server
     -display songs
     -choose which songs to remove?
 delete .cache when logging out
+
+append date-time to end of title
+error handling for negative values for -n argv
+check for if the song is popular -> if no, re-search
+add alternative way of quering f"artist:{artist} track:{track}" -> if unable to find, then use current

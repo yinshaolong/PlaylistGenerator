@@ -30,7 +30,7 @@ def parse_args():
     parser = argparse.ArgumentParser(description="Generate a playlist based on a prompt")
     parser.add_argument("-p", type=str, help="Prompt to generate playlist from")
     parser.add_argument("-m", default = 4, type=str, help="Model to use for generation")
-    parser.add_argument("-l", type=int, help="Length of playlist to generate")
+    parser.add_argument("-n", type=int, help="Length of playlist to generate")
     parser.add_argument("-pop", default = "private", type=str, help="Determines if playlist is public or private")
     return parser.parse_args()
 
