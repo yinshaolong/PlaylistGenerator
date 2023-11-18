@@ -39,7 +39,7 @@ def get_playlist_songs(spotify, search_results = None):
     '''returns a list of song ids from the search results'''
     # results_len = len(search_results["tracks"]["items"])
     print(len(search_results), search_results)
-    tracks = [search_results["tracks"]["items"][0]["id"]]
+    tracks = [search_results[idx]["tracks"]["items"][0]["id"] for idx in range(len(search_results))]
     # search_results = spotify.search(q="Uptown Funk", type = "track", limit=10)
     # results_len = len(search_results["tracks"]["items"])
     # tracks = ([search_results["tracks"]["items"][num]["id"] for num in range(results_len)])
@@ -49,7 +49,7 @@ def get_playlist_songs(spotify, search_results = None):
 def get_search_queries(spotify, playlist):
     '''returns a list spotify.search object for each song in the playlist'''
     search_queries = get_song_titles(playlist)
-    search_results = spotify.search(q=search_queries, type = "track", limit=len(search_queries))
+    search_results = [spotify.search(q=query, type = "track", limit= 3) for query in search_queries ]
     return search_results
 
 def generate_playlist(length = None, prompt = None):
