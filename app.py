@@ -1,6 +1,6 @@
 import spotipy
 from dotenv import dotenv_values
-from playlist_generator import get_playlist
+from playlist_generator import get_playlist, parse_args
 
 
 def get_song_titles(playlist):
@@ -26,7 +26,6 @@ def auth_spotify(playlist_scope = "private"):
     )
     return spotify
 
-
 def create_empty_playlist(spotify:object, current_user, title:str): #title == user_prompt
     created_playlist = spotify.user_playlist_create(
         current_user["id"],
@@ -48,7 +47,9 @@ def get_search_queries(spotify, playlist):
 
 def generate_playlist(length = None, prompt = None):
     playlist, prompt = get_playlist(length, prompt)
-    spotify, user_prompt = auth_spotify(), capitalize_prompt(prompt)
+    priv_or_public = parse_args().pop #private or public
+    priv_or_public = priv_or_public if priv_or_public == "private" else "public"
+    spotify, user_prompt = auth_spotify(priv_or_public), capitalize_prompt(prompt)
 
     current_user = spotify.current_user()
     created_playlist = create_empty_playlist(spotify, current_user, user_prompt)
