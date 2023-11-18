@@ -37,13 +37,7 @@ def create_empty_playlist(spotify:object, current_user, title:str): #title == us
 
 def get_playlist_songs(spotify, search_results = None):
     '''returns a list of song ids from the search results'''
-    # results_len = len(search_results["tracks"]["items"])
-    print(len(search_results), search_results)
     tracks = [search_results[idx]["tracks"]["items"][0]["id"] for idx in range(len(search_results))]
-    # search_results = spotify.search(q="Uptown Funk", type = "track", limit=10)
-    # results_len = len(search_results["tracks"]["items"])
-    # tracks = ([search_results["tracks"]["items"][num]["id"] for num in range(results_len)])
-    print(tracks)
     return tracks
 
 def get_search_queries(spotify, playlist):
@@ -64,10 +58,6 @@ def generate_playlist(length = None, prompt = None):
 
 #delete .cache to log user out
 
-
-
-# assert current_user is not Noney
-#searchs for 10 songs with the name "Uptown Funk" and prints their ids
 
 def main():
     generate_playlist()

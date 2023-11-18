@@ -29,8 +29,9 @@ def get_user_input(prompt:str)->str:
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate a playlist based on a prompt")
     parser.add_argument("-p", type=str, help="Prompt to generate playlist from")
-    parser.add_argument("-m", default = 3, type=str, help="Model to use for generation")
-    parser.add_argument("-l", default = 5, type=int, help="Length of playlist to generate")
+    parser.add_argument("-m", default = 4, type=str, help="Model to use for generation")
+    parser.add_argument("-l", default = 15, type=int, help="Length of playlist to generate")
+    parser.add_argument("-pop", default = 15, type=int, help="Determines if playlist is public or private")
     return parser.parse_args()
 
 def set_prompt_and_length(count, user_prompt):
@@ -44,7 +45,7 @@ def set_prompt_and_length(count, user_prompt):
 
 def get_messages_and_model(length = None, prompt = None)->list[str]:
     args = parse_args()
-    gpt_model = args.m
+    gpt_model = model[int(args.m)]
     length = args.l if not length else length
     prompt = args.p if not prompt else prompt
     messages, playlist_gen_prompt, user_prompt = set_prompt_and_length(length, prompt)
@@ -56,7 +57,7 @@ def get_messages_and_model(length = None, prompt = None)->list[str]:
 
 def get_reply(messages:str, gpt_model:str)->str:
     for data in client.chat.completions.create(
-    model=model[gpt_model],
+    model=gpt_model,
      messages=messages,
     # max_tokens = 200,
     stream=True,
@@ -82,6 +83,6 @@ def get_playlist(length = None, prompt = None)->list[dict]:
 
 def main():
     playlist = get_playlist()
-    print("\n\n\nplaylist: ",playlist, "type: ",type(playlist))
+    # print("\n\n\nplaylist: ",playlist, "type: ",type(playlist))
 if __name__ == "__main__":
     main()
