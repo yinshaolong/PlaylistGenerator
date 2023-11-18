@@ -17,27 +17,42 @@ example_json = """[
   {"song": "Harder, Better, Faster, Stronger", "artist": "Daft Punk"},
   {"song": "Can't Hold Us", "artist": "Macklemore & Ryan Lewis"}
 ]"""
+
+def get_user_input(prompt:str)->str:
+    valid_input = False
+    while not valid_input:
+        user_input = input(f"No {prompt} given. Please enter a {prompt}: ")
+        valid_input = True if user_input else False
+    return user_input
+
+
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate a playlist based on a prompt")
-    parser.add_argument("-p", default = "motivation to do homework last minute", type=str, help="Prompt to generate playlist from")
+    parser.add_argument("-p", type=str, help="Prompt to generate playlist from")
     parser.add_argument("-m", default = 3, type=str, help="Model to use for generation")
     parser.add_argument("-l", default = 5, type=int, help="Length of playlist to generate")
     return parser.parse_args()
 
-
-def get_messages_and_model()->list[str]:
-    args = parse_args()
-    gpt_model = args.m
+def set_prompt_and_length(count, user_prompt):
 
     messages = get_prompt()
-    count = args.l if args.l else get_user_input("length of playlist")
+    count = count if count else get_user_input("length of playlist")
     playlist_gen_prompt = f"Generate a playlist of {count} songs based on this prompt:"
+    user_prompt = user_prompt if user_prompt else get_user_input("prompt")
+    #passing user_prompt down to get_playlist so that we can use as title in app.py
+    return messages, playlist_gen_prompt, user_prompt
 
+def get_messages_and_model(length = None, prompt = None)->list[str]:
+    args = parse_args()
+    gpt_model = args.m
+    length = args.l if not length else length
+    prompt = args.p if not prompt else prompt
+    messages, playlist_gen_prompt, user_prompt = set_prompt_and_length(length, prompt)
     messages[1]["content"] = f"{messages[1]['content']}{'motivation to do homework last minute'}"
     messages[2]["content"] = f"{example_json}"
-    messages[3]["content"] = f"{playlist_gen_prompt}{args.p if args.p else get_user_input('prompt')}"
-    print("messages: ",messages)
-    return messages, gpt_model
+    messages[3]["content"] = f"{playlist_gen_prompt}{user_prompt}"
+    # print("messages: ",messages)
+    return messages, gpt_model, user_prompt
 
 def get_reply(messages:str, gpt_model:str)->str:
     for data in client.chat.completions.create(
@@ -51,26 +66,19 @@ def get_reply(messages:str, gpt_model:str)->str:
         if content is not None:
             yield content
 
-def get_user_input(prompt:str)->str:
-    valid_input = False
-    while not valid_input:
-        user_input = input(f"No {prompt} given. Please enter a {prompt}: ")
-        valid_input = True if user_input else False
-    return user_input
-
 def get_prompt(prompt = "prompt.json")->list[dict]:
     with open(prompt, "r") as f:
         return json.load(f)
 
-def get_playlist()->list[dict]:
+def get_playlist(length = None, prompt = None)->list[dict]:
     playlist_tokens = []
-    messages, gpt_model = get_messages_and_model()
+    messages, gpt_model, user_prompt = get_messages_and_model(length, prompt)
     for data in get_reply(messages, gpt_model):
         playlist_tokens.append(data)
         print(data, end="", flush=True)
     playlist = "".join(playlist_tokens)
     playlist = json.loads(playlist)
-    return playlist
+    return playlist, user_prompt
 
 def main():
     playlist = get_playlist()

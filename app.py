@@ -1,8 +1,11 @@
 import spotipy
 from dotenv import dotenv_values
 from playlist_generator import get_playlist
-
 config = dotenv_values(".env")
+
+playlist, user_prompt = get_playlist()
+user_prompt = " ".join(user_word.capitalize() for user_word in user_prompt.split(" "))
+print(user_prompt)
 
 spotify = spotipy.Spotify(
     auth_manager=spotipy.SpotifyOAuth(
@@ -30,7 +33,7 @@ tracks = ([search_results["tracks"]["items"][num]["id"] for num in range(results
 created_playlist = spotify.user_playlist_create(
     current_user["id"],
     public=False,
-    name="Testing Playlist"
+    name = user_prompt
 )
 
 spotify.user_playlist_add_tracks(current_user["id"], created_playlist["id"], tracks)
