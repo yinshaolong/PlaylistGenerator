@@ -13,15 +13,17 @@ def capitalize_prompt(user_prompt):
     user_prompt = " ".join(user_word.capitalize() for user_word in user_prompt.split(" "))
     return user_prompt
 
-def auth_spotify(playlist_scope = "private"):
+def auth_spotify(playlist_scope = "public"):
     config = dotenv_values(".env")
+    scope = "playlist-modify-private" if playlist_scope == "private" else 'playlist-modify-public' # playlist-modify-public insuffiecient client scope
+    print("scope in auth: ", scope)
     spotify = spotipy.Spotify(
         auth_manager=spotipy.SpotifyOAuth(
             client_id=config["SPOTIFY_CLIENT_ID"],
             client_secret=config["SPOTIFY_CLIENT_SECRET"],
             redirect_uri="http://localhost:9999",
             #determines what a user can do after logging in
-            scope="playlist-modify-private" if playlist_scope == "private" else "playlist-modify-public"
+            scope='playlist-modify-private'
         )
     )
     return spotify
@@ -48,7 +50,9 @@ def get_search_queries(spotify, playlist):
 def generate_playlist(length = None, prompt = None):
     playlist, prompt = get_playlist(length, prompt)
     priv_or_public = parse_args().pop #private or public
+    print("priv_or_public: ", priv_or_public)
     priv_or_public = priv_or_public if priv_or_public == "private" else "public"
+    print("priv_or_public after: ", priv_or_public)
     spotify, user_prompt = auth_spotify(priv_or_public), capitalize_prompt(prompt)
 
     current_user = spotify.current_user()

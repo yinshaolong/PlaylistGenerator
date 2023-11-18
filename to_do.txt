@@ -1,0 +1,4 @@
+hook up to a front end + server
+    -display songs
+    -choose which songs to remove?
+delete .cache when logging out
