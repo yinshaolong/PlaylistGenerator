@@ -41,3 +41,8 @@ def get_playlist_songs(created_playlist, search_results = None):
     tracks = search_results["tracks"]["items"][0]["id"]
     return tracks
 
+def get_search_queries(spotify, playlist):
+    '''returns a list spotify.search object for each song in the playlist'''
+    search_queries = get_song_titles(playlist)
+    search_results = spotify.search(q=search_queries, type = "track", limit=10)
+    return search_results
