@@ -47,19 +47,30 @@ def get_search_queries(spotify, playlist):
     search_results = [spotify.search(q=query, type = "track", limit= 3) for query in search_queries ]
     return search_results
 
-def generate_playlist(length = None, prompt = None):
-    playlist, prompt = get_playlist(length, prompt)
-    priv_or_public = parse_args().pop #private or public
-    print("priv_or_public: ", priv_or_public)
+def create_spotify_playlist(playlist, prompt)->None:
+    #check to see if playlist is private or public
+    priv_or_public = parse_args().pop 
     priv_or_public = priv_or_public if priv_or_public == "private" else "public"
-    print("priv_or_public after: ", priv_or_public)
+    #Get spotify user acc info in .cache and capitalize the prompt as the playlist title (user_prompt)
     spotify, user_prompt = auth_spotify(priv_or_public), capitalize_prompt(prompt)
-
+    #create empty playlist
     current_user = spotify.current_user()
     created_playlist = create_empty_playlist(spotify, current_user, user_prompt)
+    #get queries (song titles) in a format that spotify can use to search i.e. spotify.search(q=<song query>, type = "track", limit= #)
     search_queries = get_search_queries(spotify, playlist)
+    #get song ids from search results
     tracks = get_playlist_songs(spotify, search_queries)
+    #add songs to playlist based on song id.
     spotify.user_playlist_add_tracks(current_user["id"], created_playlist["id"], tracks)
+
+def create_youtube_playlist(playlist, prompt):
+    pass
+
+def generate_playlist(length = None, prompt = None):
+    #get json of the prompt
+    playlist, prompt = get_playlist(length, prompt)
+    if parse_args().t == "spotify":
+        create_spotify_playlist(playlist, prompt)
 
 #delete .cache to log user out
 

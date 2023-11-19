@@ -1,8 +1,8 @@
 
 # PlaylistGenerator
-### `python -m venv env`\
+### `python -m venv env`
   make a virtual environment
-### `source env/Scripts/activate`\
+### `source env/Scripts/activate`
   activate the virtual environment
-### `pip install requirements.txt`\
+### `pip install requirements.txt`
   install dependencies

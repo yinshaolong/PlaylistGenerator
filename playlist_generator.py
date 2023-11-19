@@ -32,6 +32,7 @@ def parse_args():
     parser.add_argument("-m", default = 4, type=str, help="Model to use for generation")
     parser.add_argument("-n", type=int, help="Length of playlist to generate")
     parser.add_argument("-pop", default = "private", type=str, help="Determines if playlist is public or private")
+    parser.add_argument("-t", default = "spotify", type=str, help="Determines playlist type (spotify or youtube)")
     return parser.parse_args()
 
 def set_prompt_and_length(count, user_prompt):
@@ -72,6 +73,10 @@ def get_prompt(prompt = "prompt.json")->list[dict]:
         return json.load(f)
 
 def get_playlist(length = None, prompt = None)->list[dict]:
+    '''
+        get json of the prompt.
+        in format of: {"song": <song name>, "artist": <artist name>}.
+    '''
     playlist_tokens = []
     messages, gpt_model, user_prompt = get_messages_and_model(length, prompt)
     for data in get_reply(messages, gpt_model):

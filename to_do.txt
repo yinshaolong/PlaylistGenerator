@@ -7,3 +7,15 @@ append date-time to end of title
 error handling for negative values for -n argv
 check for if the song is popular -> if no, re-search
 add alternative way of quering f"artist:{artist} track:{track}" -> if unable to find, then use current
+
+create youtube playlist
+    -create playlist
+    -add songs to playlist
+    -delete playlist
+    -display playlists
+    -display songs in playlist
+    -delete songs in playlist
+    -delete playlist
+    -delete all songs in playlist
+    -delete all playlists
+    -delete all songs in all playlists
