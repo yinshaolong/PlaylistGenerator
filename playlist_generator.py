@@ -25,18 +25,25 @@ def get_user_input(prompt:str)->str:
         valid_input = True if user_input else False
     return user_input
 
+def logout_user(args):
+    if os.path.exists(".cache") and args.logout:
+        os.remove(".cache")
+        print("User logged out.")
+    elif args.logout:
+        print("User is not logged in.")
+    return args.logout != None
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate a playlist based on a prompt")
     parser.add_argument("-p", type=str, help="Prompt to generate playlist from")
     parser.add_argument("-m", default = 4, type=str, help="Model to use for generation")
-    parser.add_argument("-n", type=int, help="Length of playlist to generate")
+    parser.add_argument("-l", type=int, help="Length of playlist to generate")
     parser.add_argument("-pop", default = "private", type=str, help="Determines if playlist is public or private")
     parser.add_argument("-t", default = "spotify", type=str, help="Determines playlist type (spotify or youtube)")
+    parser.add_argument("--logout", default = "spotify", type=str, help="Logs user out by deleting the cache.")
     return parser.parse_args()
 
 def set_prompt_and_length(count, user_prompt):
-
     messages = get_prompt()
     count = count if count else get_user_input("length of playlist")
     playlist_gen_prompt = f"Generate a playlist of {count} songs based on this prompt:"
@@ -78,6 +85,7 @@ def get_playlist(length = None, prompt = None)->list[dict]:
         in format of: {"song": <song name>, "artist": <artist name>}.
     '''
     playlist_tokens = []
+    args = parse_args()
     messages, gpt_model, user_prompt = get_messages_and_model(length, prompt)
     for data in get_reply(messages, gpt_model):
         playlist_tokens.append(data)

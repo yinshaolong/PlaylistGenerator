@@ -19,3 +19,5 @@ create youtube playlist
     -delete all songs in playlist
     -delete all playlists
     -delete all songs in all playlists
+
+    -may need to make prompt modular (spotify - artist + song name / vs youtube - channel + song name or channel + artist + song name)
