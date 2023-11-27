@@ -16,7 +16,6 @@ def capitalize_prompt(user_prompt):
 def auth_spotify(playlist_scope = "public"):
     config = dotenv_values(".env")
     scope = "playlist-modify-private" if playlist_scope == "private" else 'playlist-modify-public' # playlist-modify-public insuffiecient client scope
-    print("scope in auth: ", scope)
     spotify = spotipy.Spotify(
         auth_manager=spotipy.SpotifyOAuth(
             client_id=config["SPOTIFY_CLIENT_ID"],
@@ -78,6 +77,7 @@ def generate_playlist(length = None, prompt = None):
 def main():
     args = parse_args()
     if logout_user(args):
+        print("User is not logged in.")
         return
     generate_playlist()
 if __name__ == "__main__":

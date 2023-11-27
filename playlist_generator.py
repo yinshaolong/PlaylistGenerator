@@ -30,8 +30,9 @@ def logout_user(args):
         os.remove(".cache")
         print("User logged out.")
     elif args.logout:
-        print("User is not logged in.")
-    return args.logout != None
+        pass
+        # print("User is not logged in.")
+    return args.logout
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate a playlist based on a prompt")
@@ -40,7 +41,7 @@ def parse_args():
     parser.add_argument("-l", type=int, help="Length of playlist to generate")
     parser.add_argument("-pop", default = "private", type=str, help="Determines if playlist is public or private")
     parser.add_argument("-t", default = "spotify", type=str, help="Determines playlist type (spotify or youtube)")
-    parser.add_argument("--logout", help="Logs user out by deleting the cache.", action='store_true')
+    parser.add_argument( "--logout", help="Logs user out by deleting the cache.", action='store_true') # store_true is false without flag
     return parser.parse_args()
 
 def set_prompt_and_length(count, user_prompt):
