@@ -31,7 +31,7 @@ def logout_user(args):
         print("User logged out.")
     elif args.logout:
         pass
-        # print("User is not logged in.")
+        print("User is not logged in.")
     return args.logout
 
 def parse_args():

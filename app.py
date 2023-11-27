@@ -77,7 +77,6 @@ def generate_playlist(length = None, prompt = None):
 def main():
     args = parse_args()
     if logout_user(args):
-        print("User is not logged in.")
         return
     generate_playlist()
 if __name__ == "__main__":
