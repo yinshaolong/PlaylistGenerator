@@ -1,6 +1,6 @@
 import spotipy
 from dotenv import dotenv_values
-from playlist_generator import get_playlist, parse_args
+from playlist_generator import get_playlist, parse_args, logout_user
 
 
 def get_song_titles(playlist):
@@ -76,6 +76,9 @@ def generate_playlist(length = None, prompt = None):
 
 
 def main():
+    args = parse_args()
+    if logout_user(args):
+        return
     generate_playlist()
 if __name__ == "__main__":
     main()

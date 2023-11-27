@@ -40,7 +40,7 @@ def parse_args():
     parser.add_argument("-l", type=int, help="Length of playlist to generate")
     parser.add_argument("-pop", default = "private", type=str, help="Determines if playlist is public or private")
     parser.add_argument("-t", default = "spotify", type=str, help="Determines playlist type (spotify or youtube)")
-    parser.add_argument("--logout", type=str, help="Logs user out by deleting the cache.")
+    parser.add_argument("--logout", help="Logs user out by deleting the cache.", action='store_true')
     return parser.parse_args()
 
 def set_prompt_and_length(count, user_prompt):
@@ -86,8 +86,6 @@ def get_playlist(length = None, prompt = None)->list[dict]:
     '''
     playlist_tokens = []
     args = parse_args()
-    if logout_user(args):
-        return
     messages, gpt_model, user_prompt = get_messages_and_model(length, prompt)
     for data in get_reply(messages, gpt_model):
         playlist_tokens.append(data)
